@@ -10,8 +10,8 @@ import (
 	"time"
 
 	"github.com/Sirupsen/logrus"
-	"github.com/urfave/negroni"
 	"github.com/stretchr/testify/assert"
+	"github.com/urfave/negroni"
 )
 
 var (
@@ -96,6 +96,7 @@ func setupServeHTTP(t *testing.T) (*Middleware, negroni.ResponseWriter, *http.Re
 	req.Method = "GET"
 	req.Header.Set("X-Request-Id", "22035D08-98EF-413C-BBA0-C4E66A11B28D")
 	req.Header.Set("X-Real-IP", "10.10.10.10")
+	req.Header.Set("X-Forwarded-For", "123.123.123.123, 10.10.10.10")
 
 	mw := NewMiddleware()
 	mw.Logger.Formatter = &logrus.JSONFormatter{

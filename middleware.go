@@ -114,9 +114,15 @@ func (m *Middleware) ServeHTTP(rw http.ResponseWriter, r *http.Request, next htt
 
 	start := m.clock.Now()
 
-	// Try to get the real IP
+	// Server is likely behind a proxy or load balancer, check X-Real-IP header first
 	remoteAddr := r.RemoteAddr
 	if realIP := r.Header.Get("X-Real-IP"); realIP != "" {
+		remoteAddr = realIP
+	}
+
+	// if there is an X-Forwarded-For, use that instead
+	// note that this might return a list of IP addresses, not just 1
+	if realIP := r.Header.Get("X-Forwarded-For"); realIP != "" {
 		remoteAddr = realIP
 	}
 
